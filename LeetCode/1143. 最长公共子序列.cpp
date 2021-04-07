@@ -10,31 +10,27 @@
 链接：https://leetcode-cn.com/problems/longest-common-subsequence
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 */
-
+#include<algorithm>
 #include<iostream>
 #include<string>
+#include<vector>
 using namespace std;
 class Solution {
 public:
 	int longestCommonSubsequence(string text1, string text2) {
-		int n = 0, n0;
-		for (int k = 0, q = 0; k < text1.length() && q < text2.length(); k++) {
-			n0 = 0;
-			for (int i = k, j = q; i < text1.length() && j < text2.length();) {
-				if (text1.at(i) == text2.at(j)) {
-					n0++;
-					k = ++i;
-					q = ++j;
-				}
-				else if (++j == text2.length())	i++;
+		vector<vector<int> > D(text1.length() + 1, vector<int>(text2.length() + 1, 0));
+		for (int i = 1; i < text1.length() + 1; i++) {
+			for (int j = 1; j < text2.length() + 1; j++) {
+				D[i][j] = (text1.at(i - 1) == text2.at(j - 1))
+					? D[i - 1][j - 1] + 1
+					: max(D[i - 1][j], D[i][j - 1]);
 			}
-			n = n0 > n ? n0 : n;
 		}
-		return n;
+		return D[text1.length()][text2.length()];
 	}
 };
 void main() {
 	Solution so;
-	cout << so.longestCommonSubsequence("abcde", "acefb");
+	cout << so.longestCommonSubsequence("abcde", "ace");
 	system("pause");
 }
